@@ -19,25 +19,26 @@ class Simulation
         void render();
 
     private:
-        SDL_Window* window;
-        SDL_GLContext context;
-        SDL_Event event;
+        SDL_Window* m_window;
+        SDL_GLContext m_context;
+        SDL_Event m_event;
 
-        bool isRunning = true;
+        bool m_isRunning = true;
 
-        float deltaTime = 0.f;
-        float prevTime = 0.f;
-        float currTime = 0.f;
+        float m_deltaTime = 0.f;
+        float m_prevTime = 0.f;
+        float m_currTime = 0.f;
 
-        float angle = 0.f;
+        float m_angle = 0.f;
 
-        float cameraPitch = 0.f;
-        float cameraYaw = 0.f;
-        float cameraDist = 5.f;
+        float m_cameraPitch = 0.f;
+        float m_cameraYaw = 0.f;
+        float m_cameraDist = 5.f;
 
-        float pos[4] = {0.f};
+        float m_lightPos[4] = {0.f};
 
-        Planet sun;
+        Planet m_sun;
+        Planet m_earth;
 };
 
 #endif

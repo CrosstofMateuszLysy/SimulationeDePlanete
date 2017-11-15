@@ -2,7 +2,9 @@
 #define VEC3_HPP
 #include <cmath>
 
+#ifndef M_PI
 #define M_PI 3.14159265357989f
+#endif
 
 #define RAD_FULL (M_PI * 2)
 #define STEP (RAD_FULL / 64.f)

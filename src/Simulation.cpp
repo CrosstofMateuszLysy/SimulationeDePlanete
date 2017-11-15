@@ -1,13 +1,15 @@
 #include "Simulation.hpp"
+#include <SDL2/SDL_image.h>
 
 Simulation::Simulation()
 {
     SDL_Init(SDL_INIT_EVERYTHING);
+    IMG_Init(IMG_INIT_PNG);
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
 
-    window = SDL_CreateWindow(
+    m_window = SDL_CreateWindow(
         "Planetsy",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
@@ -15,8 +17,7 @@ Simulation::Simulation()
         SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL
     );
 
-    context = SDL_GL_CreateContext(window);
-    event;
+    m_context = SDL_GL_CreateContext(m_window);
 
     glClearColor(0,0,0,1);
     glMatrixMode(GL_PROJECTION);
@@ -31,13 +32,15 @@ Simulation::Simulation()
     glEnable(GL_COLOR_MATERIAL);
     glEnable(GL_LIGHT0);
 
+    glEnable(GL_TEXTURE_2D);
+
     float diffuse[] = {1.f,1.f,1.f,1.f};
     float ambient[] = {0.2f,0.2f,0.2f,1.f};
 
-    pos[0] = 2.f;
-    pos[1] = 2.f;
-    pos[2] = 2.f;
-    pos[3] = 1.f;
+    m_lightPos[0] = 2.f;
+    m_lightPos[1] = 2.f;
+    m_lightPos[2] = 2.f;
+    m_lightPos[3] = 1.f;
 
     glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
     glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
@@ -45,73 +48,76 @@ Simulation::Simulation()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    sun = Planet({0,0,0}, 1.f);
+    m_sun = Planet({0.f,0.f,0.f}, 1.f, {1.f,0.5f,0.f});
+    m_earth = Planet({2.f,0.f,0.f}, 0.2f, {0.2f, 0.5f, 1.f});
 }
 
 Simulation::~Simulation()
 {
-    SDL_DestroyWindow(window);
+    SDL_DestroyWindow(m_window);
+    IMG_Quit();
     SDL_Quit();
 }
 
 void Simulation::mainLoop()
 {
-    while (isRunning)
+    while (m_isRunning)
     {
         processEvents();
         update();
         render();
-        SDL_GL_SwapWindow(window);
+        SDL_GL_SwapWindow(m_window);
     }
 }
 
 void Simulation::processEvents()
 {
-    while (SDL_PollEvent(&event))
+    while (SDL_PollEvent(&m_event))
     {
-        if (event.type == SDL_QUIT)
-            isRunning = false;
-        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
-            isRunning = false;
+        if (m_event.type == SDL_QUIT)
+            m_isRunning = false;
+        if (m_event.type == SDL_KEYDOWN && m_event.key.keysym.sym == SDLK_ESCAPE)
+            m_isRunning = false;
     }
 }
 
 void Simulation::update()
 {
-    prevTime = currTime;
-    currTime = SDL_GetTicks();
-    deltaTime = (currTime - prevTime) / 1000.f;
+    m_prevTime = m_currTime;
+    m_currTime = SDL_GetTicks();
+    m_deltaTime = (m_currTime - m_prevTime) / 1000.f;
 
     const Uint8* keys = SDL_GetKeyboardState(nullptr);
 
     if (keys[SDL_SCANCODE_UP])
     {
-        cameraPitch += 100.f * deltaTime;
+        m_cameraPitch += 100.f * m_deltaTime;
     }
     else if (keys[SDL_SCANCODE_DOWN])
     {
-        cameraPitch -= 100.f * deltaTime;
+        m_cameraPitch -= 100.f * m_deltaTime;
     }
 
     if (keys[SDL_SCANCODE_LEFT])
     {
-        cameraYaw += 100.f * deltaTime;
+        m_cameraYaw += 100.f * m_deltaTime;
     }
     else if (keys[SDL_SCANCODE_RIGHT])
     {
-        cameraYaw -= 100.f * deltaTime;
+        m_cameraYaw -= 100.f * m_deltaTime;
     }
 
     if (keys[SDL_SCANCODE_EQUALS])
     {
-        cameraDist -= 2.f * deltaTime;
+        m_cameraDist -= 2.f * m_deltaTime;
     }
     else if (keys[SDL_SCANCODE_MINUS])
     {
-        cameraDist += 2.f * deltaTime;
+        m_cameraDist += 2.f * m_deltaTime;
     }
 
-    sun.update(deltaTime);
+    m_sun.update(m_deltaTime);
+    m_earth.update(m_deltaTime);
 }
 
 void Simulation::render()
@@ -119,11 +125,12 @@ void Simulation::render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    glTranslatef(0,0,-cameraDist);
-    glRotatef(cameraPitch, 1,0,0);
-    glRotatef(cameraYaw, 0,1,0);
+    glTranslatef(0,0,-m_cameraDist);
+    glRotatef(m_cameraPitch, 1,0,0);
+    glRotatef(m_cameraYaw, 0,1,0);
 
-    glLightfv(GL_LIGHT0, GL_POSITION, pos);
+    glLightfv(GL_LIGHT0, GL_POSITION, m_lightPos);
 
-    sun.render();
+    m_sun.render();
+    m_earth.render();
 }

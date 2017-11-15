@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5.0)
 project(ASS)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(PROJECT_LINK_LIBS -lm -lGL -lGLU -lGLEW -lSDL2main -lSDL2)
+set(PROJECT_LINK_LIBS -lm -lGL -lGLU -lGLEW -lSDL2main -lSDL2 -lSDL2_image)
 
 link_directories(/usr/local/lib)
 
