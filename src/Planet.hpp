@@ -9,7 +9,7 @@ class Planet
 {
     public:
         Planet() = default;
-        Planet(const vec3_t& pz, float radz, const vec3_t& color = vec3_t(1.f,1.f,1.f));
+        Planet(const vec3_t& pz, float radz, const char* tex, const vec3_t& color = vec3_t(1.f,1.f,1.f));
 
         void update(float deltaTime);
         void render();

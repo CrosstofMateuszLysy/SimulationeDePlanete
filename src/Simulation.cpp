@@ -48,8 +48,8 @@ Simulation::Simulation()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    m_sun = Planet({0.f,0.f,0.f}, 1.f, {1.f,0.5f,0.f});
-    m_earth = Planet({2.f,0.f,0.f}, 0.2f, {0.2f, 0.5f, 1.f});
+    m_sun = Planet({0.f,0.f,0.f}, 1.f, "Textures/sun.png", {1.f,0.5f,0.f});
+    m_earth = Planet({2.f,0.f,0.f}, 0.2f, "Textures/earth.png", {0.2f, 0.5f, 1.f});
 }
 
 Simulation::~Simulation()

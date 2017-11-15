@@ -18,10 +18,10 @@ static void theCoord(float pitch, float yaw)
     glTexCoord2f(x, y);
 }
 
-Planet::Planet(const vec3_t& pz, float radz, const vec3_t& color) : 
+Planet::Planet(const vec3_t& pz, float radz, const char* tex, const vec3_t& color) : 
     m_pos(pz), m_radius(radz), m_color(color)
 {
-    m_texture = loadTexture("Textures/sun.png");
+    m_texture = loadTexture(tex);
 }
 
 void Planet::update(float deltaTime)
