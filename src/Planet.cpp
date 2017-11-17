@@ -18,7 +18,7 @@ static void theCoord(float pitch, float yaw)
     glTexCoord2f(x, y);
 }
 
-Planet::Planet(const vec3_t& pz, float radz, const char* tex, const vec3_t& color) : 
+Planet::Planet(const vec3_t& pz, float radz, const char* tex, const vec3_t& color) :
     m_pos(pz), m_radius(radz), m_color(color)
 {
     m_texture = loadTexture(tex);
@@ -50,20 +50,22 @@ void Planet::render()
                     theVec(i, j + STEP) * m_radius
                 };
 
-                // glColor3f(m_color.x, m_color.y, m_color.z);
                 glColor3f(1.f, 1.f, 1.f);
-                glNormal3f(vecs[0].x, vecs[0].y, vecs[0].z);
 
                 theCoord(i, j);
+                glNormal3f(vecs[0].x, vecs[0].y, vecs[0].z);
                 glVertex3f(vecs[0].x, vecs[0].y, vecs[0].z);
 
                 theCoord(i + STEP, j);
+                glNormal3f(vecs[1].x, vecs[1].y, vecs[1].z);
                 glVertex3f(vecs[1].x, vecs[1].y, vecs[1].z);
 
                 theCoord(i + STEP, j + STEP);
+                glNormal3f(vecs[2].x, vecs[2].y, vecs[2].z);
                 glVertex3f(vecs[2].x, vecs[2].y, vecs[2].z);
 
                 theCoord(i, j + STEP);
+                glNormal3f(vecs[3].x, vecs[3].y, vecs[3].z);
                 glVertex3f(vecs[3].x, vecs[3].y, vecs[3].z);
             }
         }

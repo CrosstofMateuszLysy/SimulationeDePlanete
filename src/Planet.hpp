@@ -15,8 +15,6 @@ class Planet
         void render();
 
     private:
-        vec3_t m_color;
-
         vec3_t m_pos = {0.f,0.f,0.f};
         float m_radius = 1.f;
 
